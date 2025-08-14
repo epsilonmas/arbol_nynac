@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club de Niños y Niñas de Tijuana A.C.</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://raw.githubusercontent.com/epsilonmas/arbol_nynac/refs/heads/main/arbolsol.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Fix the background image so it doesn't scroll with the content */
+            background-blend-mode: overlay;
+            background-color: rgba(0, 0, 0, 0); /* 50% transparency overlay */
+        }
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+        }
+        .leaf-container {
+            width: 100%;
+            padding: 1rem;
+            /* New grid layout for all leaves */
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            place-items: center; /* Center items within each grid cell */
+            margin-bottom: 2rem;
+        }
+        .leaf {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.5s ease-in-out;
+            background-color: #F0EDED; /* Color for un-donated */
+            border-radius: 50%; /* Circle shape */
+            box-shadow: 4px 6px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            /* Fixed size for all circles in the grid */
+            width: 104px; /* Increased by 30% from 80px */
+            height: 104px; /* Increased by 30% from 80px */
+            font-size: 0.8rem; /* Adjusted font size for larger circles */
+        }
+        .leaf span:last-child {
+            font-size: 1rem; /* Adjusted font size for amount */
+        }
+        /* New CSS class for donated circles and their hover effect */
+        .donated-leaf {
+            cursor: pointer;
+        }
+        .donated-leaf:hover {
+            transform: scale(1.1); /* Adjusted scale for larger circles */
+            box-shadow: 0 0 20px 8px rgba(255, 255, 255, 0.7);
+        }
+        .bottom-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        .progress-bar-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        .progress-bar {
+            width: 80%;
+            height: 25px;
+            background-color: #374151;
+            border-radius: 9999px;
+            overflow: hidden;
+            border: 2px solid #e5e7eb;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-image: linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #6366f1, #8b5cf6);
+            transition: width 1s ease-in-out;
+            border-radius: 9999px;
+        }
+        .progress-text {
+            margin-top: 0.5rem;
+            color: #d1d5db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Main content container -->
+    <div class="main-container">
+        <!-- Leaf Container (top half of the dashboard) -->
+        <div id="leaf-container" class="leaf-container">
+            <!-- Leaf elements will be dynamically generated here -->
+        </div>
+
+        <!-- Title and Progress Bar at the bottom -->
+        <div class="bottom-container">
+            <!-- Title and Subtitle -->
+            <div class="text-center flex flex-col items-center mb-4">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmT0o4qFVhJVE9xE-twnAgvl3ArANoJgD8OA&s" alt="Club de Niños y Niñas de Tijuana A.C. logo" class="w-16 h-16 mb-2 rounded-full shadow-lg">
+                <h1 class="text-2xl md:text-3xl font-bold text-white tracking-wide">Club de Niños y Niñas de Tijuana A.C.</h1>
+                <h2 class="text-base md:text-lg font-semibold text-yellow-300 mt-1 italic">¡Necesitamos de tu ayuda para llegar a la meta!</h2>
+                <!-- New donation link -->
+                <a href="https://donaronline.org/club-de-ninos-y-ninas-tijuana-a-c/ayudanos-a-seguir-iniciando-grandes-futuros" target="_blank" class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105">
+                    «Realiza tu donativo mensual aquí»
+                </a>
+            </div>
+            
+            <!-- Progress bar with percentage labels -->
+            <div class="w-4/5 flex items-center justify-between">
+                <span class="text-white text-xs">0%</span>
+                <div id="progress-bar" class="progress-bar flex-grow mx-2">
+                    <div id="progress-fill" class="progress-bar-fill relative">
+                        <span id="progress-percentage-text" class="absolute inset-0 flex items-center justify-center text-xs text-white font-bold" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);"></span>
+                    </div>
+                </div>
+                <span class="text-white text-xs">100%</span>
+            </div>
+            <div id="progress-text" class="progress-text">
+                $0 / $0 MXN
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for data, rendering, and interactivity -->
+    <script>
+        // EDITABLE DATA CHUNK
+        // This is the data that feeds the dashboard.
+        // You can change the 'donor' name and set 'donated' to true.
+        const donations = [
+            // 10 observations with 1,000 MXN
+            { donor: "Silvestre Revueltas", quantity: 1000, donated: true },
+            { donor: "Juana Hernández", quantity: 1000, donated: true },
+            { donor: "Michael Smith", quantity: 1000, donated: true },
+            { donor: "Buscando donante", quantity: 1000, donated: false },
+            { donor: "Buscando donante", quantity: 1000, donated: false },
+            { donor: "Buscando donante", quantity: 1000, donated: false },
+            { donor: "Buscando donante", quantity: 1000, donated: false },
+            { donor: "Buscando donante", quantity: 1000, donated: false },
+            { donor: "Buscando donante", quantity: 1000, donated: false },
+            { donor: "Buscando donante", quantity: 1000, donated: false },
+            // 8 observations with 5,000 MXN
+            { donor: "José Moncayo", quantity: 5000, donated: true },
+            { donor: "Buscando donante", quantity: 5000, donated: false },
+            { donor: "Buscando donante", quantity: 5000, donated: false },
+            { donor: "Buscando donante", quantity: 5000, donated: false },
+            { donor: "Buscando donante", quantity: 5000, donated: false },
+            { donor: "Buscando donante", quantity: 5000, donated: false },
+            { donor: "Buscando donante", quantity: 5000, donated: false },
+            { donor: "Buscando donante", quantity: 5000, donated: false },
+            // 5 observations with 10,000 MXN
+            { donor: "Arturo Márquez", quantity: 10000, donated: true },
+            { donor: "Buscando donante", quantity: 10000, donated: false },
+            { donor: "Buscando donante", quantity: 10000, donated: false },
+            { donor: "Buscando donante", quantity: 10000, donated: false },
+            { donor: "Buscando donante", quantity: 10000, donated: false },
+            // 4 observations with 25,000 MXN
+            { donor: "Carlos Chávez", quantity: 25000, donated: true },
+            { donor: "Buscando donante", quantity: 25000, donated: false },
+            { donor: "Buscando donante", quantity: 25000, donated: false },
+            { donor: "Buscando donante", quantity: 25000, donated: false },
+            // 1 observation with 50,000 MXN
+            { donor: "Buscando donante", quantity: 50000, donated: false }
+        ];
+
+        // --- Do not edit below this line ---
+
+        const container = document.getElementById('leaf-container');
+        const progressBarFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        const progressPercentageText = document.getElementById('progress-percentage-text');
+        const rainbowColors = [
+            '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#6366f1', '#8b5cf6'
+        ];
+        let colorIndex = 0;
+
+        // Function to render all the leaves in a grid
+        function renderLeaves() {
+            container.innerHTML = ''; // Clear previous leaves
+            colorIndex = 0; // Reset color index
+
+            donations.forEach((donation) => {
+                const leaf = document.createElement('div');
+                
+                leaf.className = `leaf`;
+
+                // Set rainbow color and z-index for donated ovals
+                if (donation.donated) {
+                    leaf.style.backgroundColor = rainbowColors[colorIndex];
+                    colorIndex = (colorIndex + 1) % rainbowColors.length;
+                    leaf.style.zIndex = 100; // A high value to ensure it's always on top
+                    leaf.classList.add('donated-leaf');
+                } else {
+                    leaf.style.backgroundColor = '#F0EDED';
+                    leaf.style.zIndex = 1; 
+                }
+
+                leaf.innerHTML = `
+                    <span>${donation.donor}</span>
+                    <span>${formatCurrency(donation.quantity)}</span>
+                `;
+                container.appendChild(leaf);
+            });
+            updateProgressBar();
+        }
+        
+        // Function to update the progress bar
+        function updateProgressBar() {
+            const totalGoal = 250000; // Fixed goal of $250,000 MXN
+            const totalDonated = donations.reduce((sum, item) => item.donated ? sum + item.quantity : sum, 0);
+            const progressPercentage = (totalDonated / totalGoal) * 100;
+
+            progressBarFill.style.width = `${progressPercentage}%`;
+            progressText.textContent = `${formatCurrency(totalDonated)} / ${formatCurrency(totalGoal)} MXN`;
+            progressPercentageText.textContent = `${Math.round(progressPercentage)}%`;
+        }
+
+        // Function to format numbers as currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Render leaves once on load
+        window.onload = function() {
+            renderLeaves();
+        };
+        
+        // Re-render leaves on window resize to maintain layout
+        window.onresize = function() {
+            renderLeaves();
+        };
+
+    </script>
+</body>
+</html>
